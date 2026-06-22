@@ -264,6 +264,24 @@ makeThermo
     specie
 );
 
+// Peng-Robinson real-gas EOS with constant transport / hConst thermo and the
+// sensibleInternalEnergy energy form.  Needed by cfdemSolverRhoHydrateTwoPhase5
+// (twoPhaseMixtureThermo, compressibleInterFoam base) so the methane gas phase
+// can use equationOfState PengRobinsonGas while staying consistent with the
+// water phase (also constTransport / hConst / sensibleInternalEnergy).  The
+// stock rhoThermos only instantiates PengRobinsonGas with sensibleEnthalpy.
+makeThermo
+(
+    rhoThermo,
+    heRhoThermo,
+    pureMixture,
+    constTransport,
+    sensibleInternalEnergy,
+    hConstThermo,
+    PengRobinsonGas,
+    specie
+);
+
 makeThermo
 (
     rhoThermo,
