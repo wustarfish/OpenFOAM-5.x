@@ -240,18 +240,12 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::Z
     }
     else
     {
-        // One root is real
+        // One root is real.  Use cbrt, NOT pow(x, 1.0/3.0): for liquid-like
+        // states (Q3 < 0 < D with Rl < 0) Rl + D05 is negative and pow
+        // raises SIGFPE, e.g. CH4 at 2.64 MPa for T in [157, 164.4] K.
         const scalar D05 = sqrt(D);
-        const scalar S = pow(Rl + D05, 1.0/3.0);
-        scalar Tl = 0;
-        if (D05 > Rl)
-        {
-            Tl = -pow(mag(Rl - D05), 1.0/3.0);
-        }
-        else
-        {
-            Tl = pow(Rl - D05, 1.0/3.0);
-        }
+        const scalar S = cbrt(Rl + D05);
+        const scalar Tl = cbrt(Rl - D05);
 
         root = S + Tl - a2/3.0;
     }
